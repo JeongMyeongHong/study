@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 import re
 
-
 '''
 null값이 있는 데이터는 전부 제거.
 
@@ -26,14 +25,15 @@ class Pre:
                          '요리상황별명', '요리재료별명', '요리종류별명', '요리소개', '요리인분명',
                          '요리난이도명', '요리시간명', '최초등록일시', '요리내용'], inplace=True)
         material_df.rename('재료', inplace=True)
+        print(material_df.head())
         p = re.compile(r'(?<=\[)(.*?)(?=])')
         for i in range(len(material_df[:20])):
             name_list = p.findall(material_df.iloc[i])
+            print(name_list)
             for name in name_list:
                 material_df.iloc[i] = material_df.iloc[i].replace(f'[{name}] ', '|')
+                print(material_df.head())
             material_df.iloc[i] = ','.join([e.strip() for e in material_df.iloc[i].split('|')][1:])
-
-
 
         return pd.concat([df, material_df], axis=1)
 
@@ -42,5 +42,7 @@ class Pre:
 
 
 if __name__ == '__main__':
-    # Pre().preprocessing('1)무료레시피데이터결과').head()
-    print(Pre().preprocessing('1)무료레시피데이터결과')['재료'].iloc[:20])
+    data = Pre().preprocessing('1)무료레시피데이터결과')
+    print(data.columns, '\n\n')
+    print(data.head())
+    print(data['재료'].iloc[:10])
