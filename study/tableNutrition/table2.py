@@ -60,7 +60,7 @@ def extract_information(df, i):
 
 if __name__ == '__main__':
     path = '1)무료레시피데이터결과.csv'
-    df = pd.read_csv('./data/' + path, encoding='cp949', low_memory=False)
+    df = pd.read_csv('../data/' + path, encoding='cp949', low_memory=False)
     df.drop([df.index[0]], inplace=True)
     df.dropna(how='any', inplace=True)
     df.reset_index(drop=True, inplace=True)

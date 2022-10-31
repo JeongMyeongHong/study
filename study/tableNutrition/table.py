@@ -81,7 +81,7 @@ def extract_information(df, i):
 
 if __name__ == '__main__':
     file_name = '1)무료레시피데이터결과.csv'  # 경로지정
-    df = pd.read_csv('./data/' + file_name, encoding='cp949', low_memory=False)  # csv파일 읽어오기한글깨짐 방지
+    df = pd.read_csv('../data/' + file_name, encoding='cp949', low_memory=False)  # csv파일 읽어오기한글깨짐 방지
     df.drop([df.index[0]], inplace=True)
     df.dropna(how='any', inplace=True)
     df.reset_index(drop=True, inplace=True)
@@ -95,4 +95,4 @@ if __name__ == '__main__':
             df_list.append(extract_information(df, i))
     df2 = pd.concat(df_list,
                     ignore_index=True)  # i 변수에 레시피 일련번호 넣기 df3 extract_information메소드의 파라미터 df, i 에 레시피인련번호 유일한 값 찾아서 넣기
-    df2.to_csv('./save/' + file_name, encoding='cp949', index=False)  # csv 파일 저장 한글깨짐 방지
+    df2.to_csv('../save/' + file_name, encoding='cp949', index=False)  # csv 파일 저장 한글깨짐 방지
