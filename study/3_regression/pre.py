@@ -1,9 +1,11 @@
 import pandas as pd
-from sklearn.preprocessing import LabelEncoder
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import LabelEncoder, MinMaxScaler
+from sklearn.metrics import accuracy_score
 import matplotlib.pyplot as plt
 from xgboost import XGBClassifier
-
+from lightgbm import LGBMClassifier
+from catboost import CatBoostRegressor
+from sklearn.ensemble import RandomForestRegressor
 
 class Regression:
     def __init__(self, data_path='../data/3_regression/', save_path='../save/3_regression/'):
@@ -66,14 +68,27 @@ class Regression:
         x_test = scaler.transform(df_ls[1])
         return x_train, y_train, x_test
 
-    def predict(self):
-        x_train, y_train, x_test = self.preprocessing()
-        model = XGBClassifier()
+    def predict(self, x_train, y_train, x_test, model):
+        model = model
         model.fit(x_train, y_train)
+        accuracy = accuracy_score(model.predict(x_train), y_train)
+        print(accuracy)
+        predict = model.predict(x_test)
+        return predict, accuracy
 
-        return model.predict(x_test)
+    def submit(self, model):
+        submission = pd.read_csv(self.data_path + 'submission.csv')
+        x_train, y_train, x_test = self.preprocessing()
+        submission['value'], _ = self.predict(x_train, y_train, x_test, model)
+        # print(submission.head())
+        submission.to_csv(self.data_path + 'submission.csv', index=False)
+        return 'complete'
 
 
 if __name__ == '__main__':
     obj = Regression()
-    print(obj.predict())
+    x_train, y_train, x_test = obj.preprocessing()
+    obj.predict(x_train, y_train, x_test, LGBMClassifier())
+    obj.predict(x_train, y_train, x_test, XGBClassifier())
+    obj.predict(x_train, y_train, x_test, CatBoostRegressor())
+    # print(obj.submit())
